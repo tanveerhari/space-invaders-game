@@ -13,7 +13,6 @@ function love.draw()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-  game.k = key
   if key == "left" then
     game.player_state = "move_left"
   elseif key == "right" then
