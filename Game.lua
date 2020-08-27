@@ -13,10 +13,14 @@ game.player_y = game.board_rows - 1
 game.player_state = "idle"
 
 game.player_bullets = {}
-player_bullet_count = 0
+--player_bullet_count = 0
 
 function game.update()
+  updatePlayer()
   updatePlayerBullets()
+end
+
+function updatePlayer()
   if game.player_state == "move_left" then
     movePlayer("left")
     game.player_state = "idle"
@@ -30,13 +34,26 @@ function game.update()
 end
 
 function updatePlayerBullets()
-  for i = 1, player_bullet_count, 1
+  --for i = 1, table.getn(game.player_bullets), 1
+  i = 1
+  while i <= table.getn(game.player_bullets)
   do
+    -- is move to be updated
     if game.player_bullets[i].t == 5 then
-      game.player_bullets[i].y = game.player_bullets[i].y - 0.5
-      game.player_bullets[i].t = 0
+      -- is collision
+      if game.player_bullets[i].y - 0.5 <= 0 then
+        game.player_bullets[i] = game.player_bullets[table.getn(game.player_bullets)]
+        table.remove(game.player_bullets)
+        --force repeat iteration
+        i = i - 1
+      else --update move
+        game.player_bullets[i].y = game.player_bullets[i].y - 0.5
+        game.player_bullets[i].t = 0
+      end
+    else
+      game.player_bullets[i].t = game.player_bullets[i].t + 1
     end
-    game.player_bullets[i].t = game.player_bullets[i].t + 1
+    i = i + 1
   end
 end
 
@@ -49,8 +66,9 @@ function movePlayer(direction)
 end
 
 function shootPlayerBullet()
-  player_bullet_count = player_bullet_count + 1
-  game.player_bullets[player_bullet_count] = getNewBullet(game.player_x, game.player_y)
+  --player_bullet_count = player_bullet_count + 1
+  --game.player_bullets[player_bullet_count] = getNewBullet(game.player_x, game.player_y)
+  table.insert(game.player_bullets, getNewBullet(game.player_x, game.player_y))
 end
 
 function getNewBullet(shooter_x, shooter_y)

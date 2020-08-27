@@ -42,7 +42,7 @@ function drawPlayer(game)
 end
 
 function drawBullets(game)
-  for i = 1, player_bullet_count, 1
+  for i = 1, table.getn(game.player_bullets), 1
   do
     x = upper_x + (game.player_bullets[i].x * cell_size) + (cell_size/2)
     y1 = upper_y + (game.player_bullets[i].y * cell_size)
