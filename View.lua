@@ -46,7 +46,7 @@ function drawBullets(game)
   do
     x = upper_x + (game.player_bullets[i].x * cell_size) + (cell_size/2)
     y1 = upper_y + (game.player_bullets[i].y * cell_size)
-    y2 = y1 - cell_size
+    y2 = y1 - cell_size/2
     love.graphics.line(x,y1, x,y2)
   end
 end

@@ -32,7 +32,11 @@ end
 function updatePlayerBullets()
   for i = 1, player_bullet_count, 1
   do
-    game.player_bullets[i].y = game.player_bullets[i].y - 1
+    if game.player_bullets[i].t == 5 then
+      game.player_bullets[i].y = game.player_bullets[i].y - 0.5
+      game.player_bullets[i].t = 0
+    end
+    game.player_bullets[i].t = game.player_bullets[i].t + 1
   end
 end
 
@@ -46,13 +50,14 @@ end
 
 function shootPlayerBullet()
   player_bullet_count = player_bullet_count + 1
-  game.player_bullets[player_bullet_count] = getNewBullet(game.player_x, game.player_y - 1)
+  game.player_bullets[player_bullet_count] = getNewBullet(game.player_x, game.player_y)
 end
 
 function getNewBullet(shooter_x, shooter_y)
   return {
     x = shooter_x,
-    y = shooter_y
+    y = shooter_y,
+    t = 0
   }
 end
 
