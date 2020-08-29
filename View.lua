@@ -8,6 +8,7 @@ function view.draw(game)
   drawInfo(game)
   drawBoard(game)
   drawPlayer(game)
+  drawAliens(game)
   drawBullets(game)
 end
 
@@ -16,6 +17,7 @@ function drawInfo(game)
   --love.graphics.setColor(0, 1, 0)
   love.graphics.print(game.player_x, 10, 10)
   love.graphics.print(game.player_y, 40, 10)
+  love.graphics.print(game.aliens_direction, 70, 10)
 end
 
 function drawBoard(game)
@@ -39,6 +41,17 @@ function drawPlayer(game)
   x = upper_x + (game.player_x * cell_size)
   y = upper_y + (game.player_y * cell_size)
   love.graphics.rectangle("fill", x, y, cell_size, cell_size)
+end
+
+function drawAliens(game)
+  for i = 1, table.getn(game.aliens), 1
+  do
+    if not game.aliens[i].isDirty then
+      x = upper_x + (game.aliens[i].x * cell_size) + cell_size/2
+      y = upper_y + (game.aliens[i].y * cell_size) + cell_size/2
+      love.graphics.circle("fill", x, y, cell_size/2 - 5)
+    end
+  end
 end
 
 function drawBullets(game)
