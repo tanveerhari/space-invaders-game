@@ -8,16 +8,16 @@ function view.draw(game)
   drawInfo(game)
   drawBoard(game)
   drawPlayer(game)
-  drawAliens(game)
+  --drawAliens(game)
   drawBullets(game)
 end
 
 function drawInfo(game)
   -- info
   --love.graphics.setColor(0, 1, 0)
-  love.graphics.print(game.player_x, 10, 10)
-  love.graphics.print(game.player_y, 40, 10)
-  love.graphics.print(game.aliens_direction, 70, 10)
+  love.graphics.print(game.player.position.x, 10, 10)
+  love.graphics.print(game.player.position.y, 40, 10)
+  love.graphics.print(game.requests, 70, 10)
 end
 
 function drawBoard(game)
@@ -38,27 +38,27 @@ end
 
 function drawPlayer(game)
   -- players
-  x = upper_x + (game.player_x * cell_size)
-  y = upper_y + (game.player_y * cell_size)
+  x = upper_x + (game.player.position.x * cell_size)
+  y = upper_y + (game.player.position.y * cell_size)
   love.graphics.rectangle("fill", x, y, cell_size, cell_size)
 end
 
-function drawAliens(game)
-  for i = 1, table.getn(game.aliens), 1
-  do
-    if not game.aliens[i].isDirty then
-      x = upper_x + (game.aliens[i].x * cell_size) + cell_size/2
-      y = upper_y + (game.aliens[i].y * cell_size) + cell_size/2
-      love.graphics.circle("fill", x, y, cell_size/2 - 5)
-    end
-  end
-end
+-- function drawAliens(game)
+--   for i = 1, table.getn(game.aliens), 1
+--   do
+--     if not game.aliens[i].isDirty then
+--       x = upper_x + (game.aliens[i].x * cell_size) + cell_size/2
+--       y = upper_y + (game.aliens[i].y * cell_size) + cell_size/2
+--       love.graphics.circle("fill", x, y, cell_size/2 - 5)
+--     end
+--   end
+-- end
 
 function drawBullets(game)
-  for i = 1, table.getn(game.player_bullets), 1
+  for i = 1, table.getn(game.player.bullets), 1
   do
-    x = upper_x + (game.player_bullets[i].x * cell_size) + (cell_size/2)
-    y1 = upper_y + (game.player_bullets[i].y * cell_size)
+    x = upper_x + (game.player.bullets[i].position.x * cell_size) + (cell_size/2)
+    y1 = upper_y + (game.player.bullets[i].position.y * cell_size)
     y2 = y1 - cell_size/2
     love.graphics.line(x,y1, x,y2)
   end
