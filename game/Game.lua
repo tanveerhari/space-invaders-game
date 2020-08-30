@@ -1,6 +1,7 @@
 local game = {}
 
 Player = require("game/Player")
+AlienFleet = require("game/AlienFleet")
 BoardRequest = require("game/BoardRequest")
 
 game.board_x = 0
@@ -16,9 +17,12 @@ player_initial_y = game.board_rows - 1
 
 game.player = Player.newPlayer(player_initial_x, player_initial_y)
 
+game.aliens_fleet = AlienFleet.newFleet(game.board_x + 1, game.board_y + 1, game.board_cols - 2, math.floor(game.board_rows/4))
+
 function game.update()
   requests = BoardRequest.newRequestMap()
   game.player:update(requests)
+  game.aliens_fleet:update(requests)
   updatePlayerBullets(requests)
   updateBoard(requests)
 end
