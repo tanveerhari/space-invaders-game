@@ -13,8 +13,11 @@ function Bullet.newBullet(shooter_x, shooter_y, dir)
     update = function (self, requests)
       if self.timer == 5 then
         --request move
-        --self.position.y = self.position.y - 0.5
-        request_point = {x = self.position.x, y = self.position.y - 0.5}
+        request_y = self.position.y - 0.5
+        if self.direction == "down" then
+          request_y = self.position.y + 0.5
+        end
+        request_point = {x = self.position.x, y = request_y}
         request_occupant = self
         requests:addRequest(request_point, request_occupant)
         self.timer = 0

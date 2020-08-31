@@ -9,7 +9,8 @@ function view.draw(game)
   drawBoard(game)
   drawPlayer(game)
   drawAliens(game)
-  drawBullets(game)
+  drawBullets(game.player.bullets)
+  drawBullets(game.aliens_fleet.bullets)
 end
 
 function drawInfo(game)
@@ -17,7 +18,8 @@ function drawInfo(game)
   --love.graphics.setColor(0, 1, 0)
   love.graphics.print(game.player.position.x, 10, 10)
   love.graphics.print(game.player.position.y, 40, 10)
-  love.graphics.print(game.requests, 70, 10)
+  love.graphics.print(game.aliens_fleet.no_left_move and 'true' or 'false', 70, 10)
+  love.graphics.print(game.aliens_fleet.no_right_move and 'true' or 'false', 110, 10)
 end
 
 function drawBoard(game)
@@ -46,21 +48,27 @@ end
 function drawAliens(game)
   for i = 1, table.getn(game.aliens_fleet.aliens), 1
     do
-      alien = game.aliens_fleet.aliens[i]
-      if not alien.isDirty then
-        x = upper_x + (alien.position.x * cell_size) + cell_size/2
-        y = upper_y + (alien.position.y * cell_size) + cell_size/2
-        love.graphics.circle("fill", x, y, cell_size/2 - 5)
+      for j = 1, table.getn(game.aliens_fleet.aliens[i]), 1
+      do
+        alien = game.aliens_fleet.aliens[i][j]
+        if not alien.isDirty then
+          x = upper_x + (alien.position.x * cell_size) + cell_size/2
+          y = upper_y + (alien.position.y * cell_size) + cell_size/2
+          love.graphics.circle("fill", x, y, cell_size/2 - 5)
+        end
       end
     end
 end
 
-function drawBullets(game)
-  for i = 1, table.getn(game.player.bullets), 1
+function drawBullets(bullets_table)
+  for i = 1, table.getn(bullets_table), 1
   do
-    x = upper_x + (game.player.bullets[i].position.x * cell_size) + (cell_size/2)
-    y1 = upper_y + (game.player.bullets[i].position.y * cell_size)
+    x = upper_x + (bullets_table[i].position.x * cell_size) + (cell_size/2)
+    y1 = upper_y + (bullets_table[i].position.y * cell_size)
     y2 = y1 - cell_size/2
+    if bullets_table[i].direction == "down" then
+      y2 = y1 + cell_size/2
+    end
     love.graphics.line(x,y1, x,y2)
   end
 end

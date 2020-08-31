@@ -23,7 +23,8 @@ function game.update()
   requests = BoardRequest.newRequestMap()
   game.player:update(requests)
   game.aliens_fleet:update(requests)
-  updatePlayerBullets(requests)
+  updateBullets(game.player.bullets, requests)
+  updateBullets(game.aliens_fleet.bullets, requests)
   updateBoard(requests)
 end
 
@@ -33,6 +34,14 @@ function updateBoard(requests)
     v = requests.map[k]
     if isPointWithinBoard(v.point) then
       v.occupant:move(v.point)
+      -- check alien left-right move possibility here
+      if v.occupant.type == "alien" then
+        if v.occupant.position.x == game.board_x then
+          game.aliens_fleet.no_left_move = true
+        elseif v.occupant.position.x == game.board_cols - 1 then
+          game.aliens_fleet.no_right_move = true
+        end
+      end
     elseif v.occupant.type == "bullet" then
       v.occupant.isDirty = true
     end
@@ -43,16 +52,15 @@ function isPointWithinBoard(point)
   return point.x >= game.board_x and point.y >= game.board_y and  point.x < game.board_cols and point.y < game.board_rows
 end
 
-function updatePlayerBullets()
-  --for i = 1, table.getn(game.player.bullets), 1
+function updateBullets(bullets_table, requests)
   i = 1
-  while i <= table.getn(game.player.bullets)
+  while i <= table.getn(bullets_table)
   do
-    bullet = game.player.bullets[i]
+    bullet = bullets_table[i]
     if bullet.isDirty then
       --remove bullet
-      game.player.bullets[i] = game.player.bullets[table.getn(game.player.bullets)]
-      table.remove(game.player.bullets)
+      bullets_table[i] = bullets_table[table.getn(bullets_table)]
+      table.remove(bullets_table)
     else
       bullet:update(requests)
       i = i + 1
