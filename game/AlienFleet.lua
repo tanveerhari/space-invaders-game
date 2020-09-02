@@ -1,77 +1,86 @@
-local AlienFleet = {}
+AlienFleet = {}
 
-Alien = require("game/Alien")
+SpaceShip = require("game/SpaceShip")
 
-function AlienFleet.newFleet(start_x, start_y, end_x, end_y)
-  fleet = {
-    aliens = {},
-    timer = 1,
-    command = 0,
-    bullets = {},
-    left_x = start_x,
-    no_left_move = false,
-    right_x = end_x,
-    no_right_move = false,
-    chooseCommand = function(self, requests)
-      command = 0
-      if self.timer == 50 then
-        command = math.random(1, 3)
-        self.timer = 1
-        if command == 1 and self.no_left_move then
-          command = 2
-          self.no_left_move = false
-        elseif command == 2 and self.no_right_move then
-          command = 1
-          self.no_right_move = false
-        end
-      else
-        self.timer = self.timer + 1
-      end
-      return command
-    end,
-    getShooter = function (self)
-      shooter_index = math.random(1, table.getn(self.aliens[1]))
-      j = table.getn(self.aliens)
-      repeat
-        shooter = self.aliens[j][shooter_index]
-        j = j - 1
-      until j > 0 or not shooter.isDirty
-      return shooter
-    end,
-    update = function (self, requests)
-      -- choose command
-      -- idle = 0, shoot = 3, move_left = 1, move_right = 2
-      self.command = self:chooseCommand()
-      cmd = self.command
-      if cmd == 3 then
-        --shoot
-        shooter = self:getShooter()
-        if not shooter.isDirty then
-          fleet_bullets = self.bullets
-          shooter:shoot(fleet_bullets)
-        end
-      else
-        for i = 1, table.getn(self.aliens), 1
-        do
-          for j = 1, table.getn(self.aliens[i]), 1
-          do
-            if not self.aliens[i][j].isDirty then
-              self.aliens[i][j]:update(cmd, requests)
-            end
-          end
-        end
-      end
-    end
-  }
-  for j = start_y, end_y, 1
+AlienFleet.__index = AlienFleet
+--constructor
+function AlienFleet.new(initial_point, fleet_rows, fleets_cols)
+	local instance = {
+      rows = fleet_rows,
+      cols = fleets_cols,
+      timer = 1,
+      -- idle, shoot, move_left, move_right, move_down
+      commands = {"idle", "move_left", "move_right", "shoot", "move_down"},
+      aliens = {}
+	}
+
+	-- set AlienFleet as prototype for the new instance
+	setmetatable(instance, AlienFleet)
+  --instance:loadAliens(initial_point)
+	return instance
+end
+
+-- method definitions
+function AlienFleet:loadAliens(initial_point)
+  for i = 1, self.rows, 1
    do
-     fleet.aliens[j] = {}
-     for i = start_x, end_x, 1
+     self.aliens[i] = {}
+     for j = 1, self.cols, 1
      do
-       fleet.aliens[j][i] = Alien.newAlien(i, j)
+       alien_point = {x = initial_point.x + j - 1, y = initial_point.y + i - 1}
+       self.aliens[i][j] = SpaceShip.new(alien_point, "alien", 1, "down")
      end
    end
-  return fleet
+end
+
+function AlienFleet:chooseCommand()
+  index = 0
+  if self.timer == 50 then
+    index = math.random(1, 4)
+    self.timer = 1
+  else
+    self.timer = self.timer + 1
+  end
+  return self.commands[index]
+end
+
+function AlienFleet:getShooter()
+  shooter_index = math.random(1, self.cols)
+  j = self.rows
+  repeat
+    shooter = self.aliens[j][shooter_index]
+    j = j - 1
+  until j > 0 or not shooter.is_dirty
+  return shooter
+end
+
+function AlienFleet:shoot()
+  shooter = self:getShooter()
+  if not shooter.is_dirty then
+    shooter.state = "shoot"
+    shooter:update(requests)
+  end
+end
+
+function AlienFleet:moveAliens(command)
+  for i = 1, self.rows, 1
+  do
+    for j = 1, self.cols, 1
+    do
+      alien = self.aliens[i][j]
+			alien.state = command
+      alien:update(requests)
+    end
+  end
+end
+
+function AlienFleet:update()
+  command = self:chooseCommand()
+  if command == "shoot" then
+    self:shoot()
+  else
+    self:moveAliens(command)
+  end
 end
 
 return AlienFleet

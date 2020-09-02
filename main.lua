@@ -1,11 +1,14 @@
 function love.load()
-  game = require("game/game")
+  Game = require("game/Game")
+  game = Game.new(12, 15)
+  game:load(12,15)
+
   view = require("view/view")
 
 end
 
 function love.update(dt)
-  game.update()
+  game:update()
 end
 
 function love.draw()
@@ -20,8 +23,4 @@ function love.keypressed(key, scancode, isrepeat)
   elseif key == "lctrl" then
     game.player.state = "shoot"
   end
-end
-
-function love.conf(t)
-	t.console = true
 end
