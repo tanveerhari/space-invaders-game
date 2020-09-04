@@ -18,6 +18,7 @@ function Game.new(board_rows, board_cols)
 	-- set Game as prototype for the new instance
 	setmetatable(instance, Game)
 	--instance:load()
+	print("new game")
 	return instance
 end
 

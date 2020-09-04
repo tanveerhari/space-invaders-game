@@ -25,7 +25,7 @@ function drawInfo(game)
   --love.graphics.setColor(0, 1, 0)
   love.graphics.print(game.player.position.x, 10, 10)
   love.graphics.print(game.player.position.y, 40, 10)
-  --love.graphics.print(game.aliens_fleet.no_left_move and 'true' or 'false', 70, 10)
+  love.graphics.print(game.aliens_fleet.alignment, 70, 10)
   --love.graphics.print(game.aliens_fleet.no_right_move and 'true' or 'false', 110, 10)
 end
 

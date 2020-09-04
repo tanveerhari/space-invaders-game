@@ -35,21 +35,25 @@ function SpaceShip:shoot()
 end
 
 function SpaceShip:updateState(requests)
+	request_point = {x = self.position.x, y = self.position.y}
 	if self.state == "move_left" then
     request_point = {x = self.position.x - 1, y = self.position.y}
-    request_occupant = self
-    requests:addRequest(request_point, request_occupant)
+    --request_occupant = self
+    --requests:addRequest(request_point, request_occupant)
   elseif self.state == "move_right" then
     request_point = {x = self.position.x + 1, y = self.position.y}
-    request_occupant = self
-    requests:addRequest(request_point, request_occupant)
+    --request_occupant = self
+    --requests:addRequest(request_point, request_occupant)
   elseif self.state == "move_down" then
     request_point = {x = self.position.x, y = self.position.y + 1}
-    request_occupant = self
-    requests:addRequest(request_point, request_occupant)
+    --request_occupant = self
+    --requests:addRequest(request_point, request_occupant)
   elseif self.state == "shoot" then
     self:shoot()
   end
+	--send request here
+	request_occupant = self
+	requests:addRequest(request_point, request_occupant)
   self.state = "idle"
 end
 

@@ -6,6 +6,7 @@ AlienFleet.__index = AlienFleet
 --constructor
 function AlienFleet.new(initial_point, fleet_rows, fleets_cols)
 	local instance = {
+			alignment = "center",
       rows = fleet_rows,
       cols = fleets_cols,
       timer = 1,
@@ -63,7 +64,11 @@ function AlienFleet:shoot()
 end
 
 function AlienFleet:moveAliens(command)
-  for i = 1, self.rows, 1
+	if (self.alignment == "left" and command == "move_left") or (self.alignment == "right" and command == "move_right") then
+		--do nothing
+		command = "idle"
+	end
+	for i = 1, self.rows, 1
   do
     for j = 1, self.cols, 1
     do
@@ -71,7 +76,23 @@ function AlienFleet:moveAliens(command)
 			alien.state = command
       alien:update(requests)
     end
-  end
+	end
+end
+
+function AlienFleet:updateAlignment(command)
+	if command == "move_left" then
+		if self.alignment == "center" then
+			self.alignment = "left"
+		elseif self.alignment == "right" then
+			self.alignment = "center"
+		end
+	elseif command == "move_right" then
+		if self.alignment == "center" then
+			self.alignment = "right"
+		elseif self.alignment == "left" then
+			self.alignment = "center"
+		end
+	end
 end
 
 function AlienFleet:update()
@@ -80,6 +101,7 @@ function AlienFleet:update()
     self:shoot()
   else
     self:moveAliens(command)
+		self:updateAlignment(command)
   end
 end
 
