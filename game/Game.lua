@@ -11,7 +11,7 @@ function Game.new(board_rows, board_cols)
     is_in_play = true,
     score = 0,
 		level = 1,
-		initial_down_level = 16,
+		initial_decision_limit = 50,
     board = nil,--Board.new(board_rows, board_cols),
     player = nil,
     aliens_fleet = nil
@@ -91,7 +91,8 @@ function Game:upgradeLevel()
 	if shoot_frequency <= 0 then
 		shoot_frequency = 1
 	end
-	self.aliens_fleet:upgrade(initial_alien_point, (self.initial_down_level - self.level), shoot_frequency)
+	level_decision_limit = self.initial_decision_limit - ((self.level - 1) * 2)
+	self.aliens_fleet:upgrade(initial_alien_point, level_decision_limit, shoot_frequency)
 end
 
 return Game

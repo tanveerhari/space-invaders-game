@@ -22,5 +22,7 @@ function love.keypressed(key, scancode, isrepeat)
     game.player.state = "move_right"
   elseif key == "lctrl" then
     game.player.state = "shoot"
+  elseif key == "n" and not game.is_in_play then
+    love.load()
   end
 end

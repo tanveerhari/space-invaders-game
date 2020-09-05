@@ -23,12 +23,13 @@ end
 function drawInfo(game)
   -- info
   --love.graphics.setColor(0, 1, 0)
+  love.graphics.print("Press 'left ctrl' to shoot, 'left/right' arrows to move, 'n' for new game", 10, 30)
   love.graphics.print("score:", 10, 10)
   love.graphics.print(game.score, 50, 10)
   love.graphics.print("lives:", 100, 10)
   love.graphics.print(game.player.lives, 140, 10)
   love.graphics.print(game.is_in_play and "true" or "false", 180, 10)
-  love.graphics.print(game.aliens_fleet.down_level, 210, 10)
+  love.graphics.print(game.aliens_fleet.decision_limit, 210, 10)
 end
 
 function drawBoard(game)

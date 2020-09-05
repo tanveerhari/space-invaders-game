@@ -11,7 +11,7 @@ function AlienFleet.new(initial_point, fleet_rows, fleets_cols)
       cols = fleets_cols,
       timer = 1,
 			down_timer = 1,
-			down_level = 15,
+			decision_limit = 50,
 			shoot_frequency = 1,
 			dirty_count = 0,
       -- idle, shoot, move_left, move_right, move_down
@@ -42,7 +42,7 @@ function AlienFleet:loadAliens(initial_point)
    end
 end
 
-function AlienFleet:upgrade(initial_point, down_level, shoot_frequency)
+function AlienFleet:upgrade(initial_point, decision_limit, shoot_frequency)
 	-- reset parameters
 	self.dirty_count = 0
 	self.timer = 1
@@ -52,24 +52,25 @@ function AlienFleet:upgrade(initial_point, down_level, shoot_frequency)
 	self:loadAliens(initial_point)
 
 	--upgrade shoot and move_down frequencies
-	self.down_level = down_level
+	self.decision_limit = decision_limit
 	self.shoot_frequency = shoot_frequency
 end
 
 function AlienFleet:chooseCommand()
   index = 0
-  if self.timer == 50 then
-		if self.down_timer == self.down_level then
+  if self.timer == self.decision_limit then
+		if self.down_timer % 3 == 0 then
+			index = 4
+		elseif self.down_timer % 13 == 0 then
 			index = 5
-			self.down_timer = 1
 		else
-    	index = math.random(1, 4)
-			self.down_timer = self.down_timer + 1
+    	index = math.random(1, 3)
 		end
 		self.timer = 1
   else
     self.timer = self.timer + 1
   end
+	self.down_timer = self.down_timer + 1
   return self.commands[index]
 end
 
