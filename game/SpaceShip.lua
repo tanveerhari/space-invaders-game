@@ -9,7 +9,6 @@ function SpaceShip.new(initial_point, ship_type, ship_lives, opposing_direction)
     position = initial_point,
     type = ship_type,
     lives = ship_lives,
-		hits = 0,
     -- idle, shoot, move_left, move_right, move_down
     state = "idle",
     bullets = {},
@@ -21,6 +20,22 @@ end
 
 -- extends BoardObject
 setmetatable(SpaceShip,{__index = BoardObject})
+
+function SpaceShip:upgrade(initial_point)
+	self.position = initial_point
+	self.is_dirty = false
+	self.state = "idle"
+	self:emptyBullets()
+end
+
+function SpaceShip:emptyBullets()
+	count = table.getn(self.bullets)
+	for i = 1, count, 1
+	do
+		bullet = table.remove(self.bullets)
+		bullet = nil
+	end
+end
 
 -- override
 function SpaceShip:update(requests)
@@ -65,7 +80,8 @@ function SpaceShip:updateBullets(requests)
     if bullet.is_dirty then
       --remove bullet
       self.bullets[i] = self.bullets[table.getn(self.bullets)]
-      table.remove(self.bullets)
+      dirty_bullet = table.remove(self.bullets)
+			dirty_bullet = nil
     else
       bullet:update(requests)
       i = i + 1

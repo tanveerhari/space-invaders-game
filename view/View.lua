@@ -25,9 +25,10 @@ function drawInfo(game)
   --love.graphics.setColor(0, 1, 0)
   love.graphics.print("score:", 10, 10)
   love.graphics.print(game.score, 50, 10)
-  love.graphics.print("lives:", 70, 10)
-  love.graphics.print(game.player.lives, 100, 10)
-  love.graphics.print(game.is_in_play and "true" or "false", 120, 10)
+  love.graphics.print("lives:", 100, 10)
+  love.graphics.print(game.player.lives, 140, 10)
+  love.graphics.print(game.is_in_play and "true" or "false", 180, 10)
+  love.graphics.print(game.aliens_fleet.down_level, 210, 10)
 end
 
 function drawBoard(game)
@@ -35,16 +36,16 @@ function drawBoard(game)
   width = game.board.cols * cell_size
   height = game.board.rows * cell_size
   love.graphics.rectangle("line", upper_x, upper_y, width, height)
-  for i = 1, game.board.rows, 1
-  do
-    for j = 1, game.board.cols, 1
-    do
-      view_point = getViewPoint({x = j, y = i})
-      --x = upper_x + (j * cell_size)
-      --y = upper_y + (i * cell_size)
-      love.graphics.rectangle("line", view_point.x, view_point.y, cell_size, cell_size)
-    end
-  end
+  -- for i = 1, game.board.rows, 1
+  -- do
+  --   for j = 1, game.board.cols, 1
+  --   do
+  --     view_point = getViewPoint({x = j, y = i})
+  --     --x = upper_x + (j * cell_size)
+  --     --y = upper_y + (i * cell_size)
+  --     love.graphics.rectangle("line", view_point.x, view_point.y, cell_size, cell_size)
+  --   end
+  -- end
 end
 
 function drawPlayer(game)

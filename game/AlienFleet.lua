@@ -11,6 +11,9 @@ function AlienFleet.new(initial_point, fleet_rows, fleets_cols)
       cols = fleets_cols,
       timer = 1,
 			down_timer = 1,
+			down_level = 15,
+			shoot_frequency = 1,
+			dirty_count = 0,
       -- idle, shoot, move_left, move_right, move_down
       commands = {"idle", "move_left", "move_right", "shoot", "move_down"},
       aliens = {}
@@ -30,15 +33,33 @@ function AlienFleet:loadAliens(initial_point)
      for j = 1, self.cols, 1
      do
        alien_point = {x = initial_point.x + j - 1, y = initial_point.y + i - 1}
-       self.aliens[i][j] = SpaceShip.new(alien_point, "alien", 1, "down")
+			 if self.aliens[i][j] == nil then
+				 self.aliens[i][j] = SpaceShip.new(alien_point, "alien", 1, "down")
+			 else
+				 self.aliens[i][j]:upgrade(alien_point)
+			 end
      end
    end
+end
+
+function AlienFleet:upgrade(initial_point, down_level, shoot_frequency)
+	-- reset parameters
+	self.dirty_count = 0
+	self.timer = 1
+	self.down_timer = 1
+	self.alignment = "center"
+	-- reset and upgrade aliens
+	self:loadAliens(initial_point)
+
+	--upgrade shoot and move_down frequencies
+	self.down_level = down_level
+	self.shoot_frequency = shoot_frequency
 end
 
 function AlienFleet:chooseCommand()
   index = 0
   if self.timer == 50 then
-		if self.down_timer == 5 then
+		if self.down_timer == self.down_level then
 			index = 5
 			self.down_timer = 1
 		else
@@ -52,22 +73,30 @@ function AlienFleet:chooseCommand()
   return self.commands[index]
 end
 
-function AlienFleet:getShooter()
-  shooter_index = math.random(1, self.cols)
+function AlienFleet:getShooter(exclude_index)
+	repeat
+		shooter_index = math.random(1, self.cols)
+	until shooter_index ~= exclude_index
   j = self.rows
   repeat
     shooter = self.aliens[j][shooter_index]
     j = j - 1
   until j > 0 or not shooter.is_dirty
-  return shooter
+  return {alien = shooter, index = shooter_index}
 end
 
 function AlienFleet:shoot()
-  shooter = self:getShooter()
-  if not shooter.is_dirty then
-    shooter.state = "shoot"
-    shooter:update(requests)
-  end
+	exclude_index = 0
+	for i = 1, self.shoot_frequency, 1
+	do
+  	shooter_info = self:getShooter(exclude_index)
+		exclude_index = shooter_info.index
+		shooter = shooter_info.alien
+  	if not shooter.is_dirty then
+    	shooter.state = "shoot"
+    	shooter:update(requests)
+  	end
+	end
 end
 
 function AlienFleet:moveAliens(command)

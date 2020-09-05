@@ -52,12 +52,12 @@ function Board:handleMultipleOccupantRequest(request)
 	print("collision: "..collision)
 	if collision == "ba" or collision == "ab" then
 		-- increase player hits
-		return {player_dirty = false, player_hits_gained = 1}
+		return {player_dirty = false, player_hits_gained = 1, alien_dirty_count = 1}
 	elseif collision == "pa" or collision == "ap" then
 		-- player is dirty
-		return {player_dirty = true, player_hits_gained = 0}
+		return {player_dirty = true, player_hits_gained = 0, alien_dirty_count = 0}
 	else
-		return {player_dirty = false, player_hits_gained = 0}
+		return {player_dirty = false, player_hits_gained = 0, alien_dirty_count = 0}
 	end
 end
 
@@ -65,7 +65,8 @@ function Board:update()
 	response = {
 		player_dirty = false,
 		player_hits_gained = 0,
-		alien_fleet_down_level = 0
+		alien_fleet_down_level = 0,
+		alien_dirty_count = 0
 	}
   for k in pairs(self.requests.map)
   do
@@ -90,6 +91,7 @@ function Board:updateSingleOccupantResponse(response, r)
 end
 
 function Board:updateMultipleOccupantResponse(response, r)
+	response.alien_dirty_count = response.alien_dirty_count + r.alien_dirty_count
 	response.player_hits_gained = response.player_hits_gained + r.player_hits_gained
 	response.player_dirty = response.player_dirty or r.player_dirty
 end
