@@ -64,19 +64,20 @@ function Game:updateGameState(response)
 		self.is_in_play = false
 	end
 	--update game level
+	--print("dirty count: "..self.aliens_fleet.dirty_count..","..(self.aliens_fleet.rows * self.aliens_fleet.cols))
 	if self.is_in_play and self.aliens_fleet.dirty_count == (self.aliens_fleet.rows * self.aliens_fleet.cols) then
 		self:upgradeLevel()
 	end
 end
 
 function Game:upgradeLevel()
-	print("upgrading level")
+	--print("upgrading level")
 	if self.level == 10 then
 		self.level = 1
 	else
 		self.level = self.level + 1
 	end
-
+	print("level: "..self.level)
 	-- reset and upgrade player and bullets
 	player_initial_x = math.floor(game.board.cols/2)
 	player_initial_y = game.board.rows - 1

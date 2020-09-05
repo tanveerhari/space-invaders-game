@@ -80,9 +80,11 @@ function AlienFleet:getShooter(exclude_index)
 	until shooter_index ~= exclude_index
   j = self.rows
   repeat
+		--print("loop: "..j..","..shooter_index)
     shooter = self.aliens[j][shooter_index]
     j = j - 1
-  until j > 0 or not shooter.is_dirty
+  until j <= 0 or not shooter.is_dirty
+	--print("shooter: "..j..","..shooter_index)
   return {alien = shooter, index = shooter_index}
 end
 

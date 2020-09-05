@@ -34,30 +34,32 @@ end
 function Board:handleMultipleOccupantRequest(request)
 	-- should we check for valid point?
 	collision = ""
+	dirty_aliens = 0
 	for i = 1, table.getn(request.occupants), 1
 	do
 		occupant = request.occupants[i]
-		print(occupant.type)
 		if occupant.type == "bullet" then
+			--print(occupant.type)
 			occupant.is_dirty = true
 			collision = collision.."b"
 		elseif occupant.type == "alien" then
 			occupant.is_dirty = true
+			dirty_aliens = dirty_aliens + 1
 			collision = collision.."a"
 		elseif occupant.type == "player" then
 			occupant.lives = occupant.lives - 1
 			collision = collision.."p"
 		end
 	end
-	print("collision: "..collision)
+	--print("collision: "..collision)
 	if collision == "ba" or collision == "ab" then
 		-- increase player hits
-		return {player_dirty = false, player_hits_gained = 1, alien_dirty_count = 1}
+		return {player_dirty = false, player_hits_gained = 1, alien_dirty_count = dirty_aliens}
 	elseif collision == "pa" or collision == "ap" then
 		-- player is dirty
-		return {player_dirty = true, player_hits_gained = 0, alien_dirty_count = 0}
+		return {player_dirty = true, player_hits_gained = 0, alien_dirty_count = dirty_aliens}
 	else
-		return {player_dirty = false, player_hits_gained = 0, alien_dirty_count = 0}
+		return {player_dirty = false, player_hits_gained = 0, alien_dirty_count = dirty_aliens}
 	end
 end
 
