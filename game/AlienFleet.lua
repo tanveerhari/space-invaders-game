@@ -10,6 +10,7 @@ function AlienFleet.new(initial_point, fleet_rows, fleets_cols)
       rows = fleet_rows,
       cols = fleets_cols,
       timer = 1,
+			down_timer = 1,
       -- idle, shoot, move_left, move_right, move_down
       commands = {"idle", "move_left", "move_right", "shoot", "move_down"},
       aliens = {}
@@ -37,8 +38,14 @@ end
 function AlienFleet:chooseCommand()
   index = 0
   if self.timer == 50 then
-    index = math.random(1, 4)
-    self.timer = 1
+		if self.down_timer == 5 then
+			index = 5
+			self.down_timer = 1
+		else
+    	index = math.random(1, 4)
+			self.down_timer = self.down_timer + 1
+		end
+		self.timer = 1
   else
     self.timer = self.timer + 1
   end

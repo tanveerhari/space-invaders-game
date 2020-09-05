@@ -23,10 +23,11 @@ end
 function drawInfo(game)
   -- info
   --love.graphics.setColor(0, 1, 0)
-  love.graphics.print(game.player.position.x, 10, 10)
-  love.graphics.print(game.player.position.y, 40, 10)
-  love.graphics.print(game.aliens_fleet.alignment, 70, 10)
-  --love.graphics.print(game.aliens_fleet.no_right_move and 'true' or 'false', 110, 10)
+  love.graphics.print("score:", 10, 10)
+  love.graphics.print(game.score, 50, 10)
+  love.graphics.print("lives:", 70, 10)
+  love.graphics.print(game.player.lives, 100, 10)
+  love.graphics.print(game.is_in_play and "true" or "false", 120, 10)
 end
 
 function drawBoard(game)

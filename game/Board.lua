@@ -22,9 +22,13 @@ end
 function Board:handleSingleOccupantRequest(request)
 	if self:isPointValid(request.point) then
 		request.occupants[1]:move(request.point)
+		if request.occupants[1].type == "alien" then
+			return {alien_fleet_down_level = request.occupants[1].position.y}
+		end
 	elseif request.occupants[1].type == "bullet" then
 		request.occupants[1].is_dirty = true
 	end
+	return {alien_fleet_down_level = 0}
 end
 
 function Board:handleMultipleOccupantRequest(request)
@@ -48,21 +52,20 @@ function Board:handleMultipleOccupantRequest(request)
 	print("collision: "..collision)
 	if collision == "ba" or collision == "ab" then
 		-- increase player hits
-		return {player_dirty = false, player_lives_lost = 0, player_hits_gained = 1}
-	elseif collision == "bp" or collision == "pb" then
-		-- decrease player lives
-		return {player_dirty = false, player_lives_lost = 1, player_hits_gained = 0}
-	elseif collision == "ba" or collision == "ab" then
+		return {player_dirty = false, player_hits_gained = 1}
+	elseif collision == "pa" or collision == "ap" then
 		-- player is dirty
-		return {player_dirty = true, player_lives_lost = 0, player_hits_gained = 0}
+		return {player_dirty = true, player_hits_gained = 0}
+	else
+		return {player_dirty = false, player_hits_gained = 0}
 	end
 end
 
 function Board:update()
 	response = {
 		player_dirty = false,
-		player_lives_lost = 0,
-		player_hits_gained = 0
+		player_hits_gained = 0,
+		alien_fleet_down_level = 0
 	}
   for k in pairs(self.requests.map)
   do
@@ -70,17 +73,23 @@ function Board:update()
 		if table.getn(v.occupants) > 1 then
 			-- collision
 			r = self:handleMultipleOccupantRequest(v)
-			self:updateResponse(response, r)
+			self:updateMultipleOccupantResponse(response, r)
 		else
 			-- handle single request
-			self:handleSingleOccupantRequest(v)
+			r = self:handleSingleOccupantRequest(v)
+			self:updateSingleOccupantResponse(response, r)
 		end
   end
 	return response
 end
 
-function Board:updateResponse(response, r)
-	response.player_lives_lost = response.player_lives_lost + r.player_lives_lost
+function Board:updateSingleOccupantResponse(response, r)
+	if response.alien_fleet_down_level < r.alien_fleet_down_level then
+		response.alien_fleet_down_level = r.alien_fleet_down_level
+	end
+end
+
+function Board:updateMultipleOccupantResponse(response, r)
 	response.player_hits_gained = response.player_hits_gained + r.player_hits_gained
 	response.player_dirty = response.player_dirty or r.player_dirty
 end
@@ -95,10 +104,6 @@ function Board:newRequestMap()
     map = {},
     addRequest = function(self, request_position, request_occupant)
       key = request_position.x..":"..request_position.y
-      -- self.map[key] = {
-      --   point = request_position,
-      --   occupant = request_occupant
-      -- }
 			if self.map[key] == nil then
 				self.map[key] = {
 					point = nil,
@@ -113,6 +118,5 @@ function Board:newRequestMap()
     end
   }
 end
-
 
 return Board
