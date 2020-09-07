@@ -1,6 +1,6 @@
 AlienFleet = {}
 
-SpaceShip = require("game/model/SpaceShip")
+SpaceShip = require "game.model.SpaceShip"
 
 AlienFleet.__index = AlienFleet
 --constructor

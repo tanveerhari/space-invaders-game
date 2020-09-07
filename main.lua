@@ -1,9 +1,12 @@
+--package.path = package.path .. "../?.lua;"
+--print(package.path)
+
 function love.load()
-  Game = require("game/model/Game")
+  Game = require "game.model.Game"
   game = Game.new(12, 15)
   game:load(12,15)
 
-  view = require("game/view/view")
+  view = require "game.view.view"
 
 end
 
