@@ -28,8 +28,8 @@ function drawInfo(game)
   love.graphics.print(game.score, 50, 10)
   love.graphics.print("lives:", 100, 10)
   love.graphics.print(game.player.lives, 140, 10)
-  love.graphics.print(game.is_in_play and "true" or "false", 180, 10)
-  love.graphics.print(game.aliens_fleet.decision_limit, 210, 10)
+  --love.graphics.print(game.is_in_play and "true" or "false", 180, 10)
+  --love.graphics.print(game.aliens_fleet.decision_limit, 210, 10)
 end
 
 function drawBoard(game)

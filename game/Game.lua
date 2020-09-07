@@ -72,6 +72,7 @@ end
 
 function Game:upgradeLevel()
 	--print("upgrading level")
+	previous_level = self.level
 	if self.level == 10 then
 		self.level = 1
 	else
@@ -83,8 +84,8 @@ function Game:upgradeLevel()
 	player_initial_y = game.board.rows - 1
 	initial_player_point = {x = player_initial_x, y = player_initial_y}
 	self.player:upgrade(initial_player_point)
-	self.player.lives = self.player.lives + 1
-	self.score = self.score + 10
+	--self.player.lives = self.player.lives + 1
+	self.score = self.score + previous_level
 
 	-- reset and upgrade alien fleet, aliens and bullets
 	initial_alien_point = {x = 2, y = 2}
