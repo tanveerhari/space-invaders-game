@@ -1,6 +1,6 @@
 SpaceShip = {}
-BoardObject = require("game/BoardObject")
-Bullet = require("game/Bullet")
+BoardObject = require("game/model/BoardObject")
+Bullet = require("game/model/Bullet")
 
 -- constructor
 SpaceShip.__index = SpaceShip

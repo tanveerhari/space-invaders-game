@@ -1,8 +1,8 @@
 Game = {}
 
-SpaceShip = require("game/SpaceShip")
-AlienFleet = require("game/AlienFleet")
-Board = require("game/Board")
+SpaceShip = require("game/model/SpaceShip")
+AlienFleet = require("game/model/AlienFleet")
+Board = require("game/model/Board")
 
 Game.__index = Game
 --constructor

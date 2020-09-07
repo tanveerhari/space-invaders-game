@@ -1,5 +1,5 @@
 Bullet = {}
-BoardObject = require("game/BoardObject")
+BoardObject = require("game/model/BoardObject")
 
 -- constructor
 Bullet.__index = Bullet

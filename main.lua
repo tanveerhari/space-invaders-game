@@ -1,9 +1,9 @@
 function love.load()
-  Game = require("game/Game")
+  Game = require("game/model/Game")
   game = Game.new(12, 15)
   game:load(12,15)
 
-  view = require("view/view")
+  view = require("game/view/view")
 
 end
 
