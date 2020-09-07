@@ -6,7 +6,7 @@ function love.load()
   game = Game.new(12, 15)
   game:load(12,15)
 
-  view = require "game.view.view"
+  view = require "game.view.View"
 
 end
 
